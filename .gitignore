@@ -1,0 +1,8 @@
+# La carpeta mysql_data conté la BBDD que utilitza el
+# mysql del docker compose
+# Cadascú ha de tenir la seva carpeta mysql_data	
+
+# Per això, aquesta carpeta no es pujarà al repositori
+# però si que es crearà al fer el docker-compose up
+
+mysql_data/
