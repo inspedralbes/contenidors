@@ -37,4 +37,4 @@ Aquestes imatges es poden publicar en repositoris d'imatges (públics o privats)
 * És molt important revisar el COPY i el CMD del final ja que són els que determinen quins fitxers es copien DINS de la imatge, i quin serà el programa que s'executarà en el contenidor.
 
 ## Hibrid
-Sovint, a producció, es fa un emfocament hybrid, es creen les imatges específiques per a cadascun dels nostres serveis, i s'aixequen de forma conjunta amb compose
+Sovint, a producció, es fa un emfocament hybrid, es creen les imatges específiques per a cadascun dels nostres serveis amb els seus fitxers, s'aixequen de forma conjunta amb compose i les bases de dades tenen un volum extern montat per fer la informació persistent.
