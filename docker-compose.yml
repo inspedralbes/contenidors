@@ -10,27 +10,31 @@
 # cada cop que engeguem el contenidor, hem de fer servir aquest compose
 # que monta el codi de la nostra aplicació com un volum per a cadascuna de les imatges
 
-
 services:
 
-# Servidor node que aixeca un WebSocker al prt 8080
-# el codi està a la carpeta "node" i s'executa amb "npm start"
-# S'ha de fer un npm install per instal·lar les dependències ABANS
-# d'engegar-ho tot
-# El Dockerfile és totalment autocontingut, però aquí depen de la carpeta node_modules
-# que ja hi hagi
+  # Servidor node que aixeca un WebSocker al prt 8080
+  # el codi està a la carpeta "node" i s'executa amb "npm start"
+  # S'ha de fer un npm install per instal·lar les dependències ABANS
+  # d'engegar-ho tot
+  # El Dockerfile és totalment autocontingut, però aquí depen de la carpeta node_modules
+  # que ja hi hagi
   node:
-    image: node:19-buster-slim
+    image: node:20
     volumes:
       - ./node:/home/node/app
     working_dir: /home/node/app
-    command: "npm start"
+    environment:
     ports:
       - 8080:8080
+      #per una banda primer ho instal·lem tot amb npm ci que fa la instal·lació
+      #neta, i després executemn npm start per aixecar el nodejs
+      #ATENCIO, al package.json l'script start l'hem canviat pq. cridi a
+      #nodemon enlloc de node. D'aquesta forma detecta els canvis ens els 
+      #fitxers i recarrega el nodejs
+    command: bash -c "npm ci && npm start"
 
-
-# Servidor web NGINX per servir els fitxers estàtics pel port 80
-# Serveix els fitxers de la carpeta "front" 
+  # Servidor web NGINX per servir els fitxers estàtics pel port 80
+  # Serveix els fitxers de la carpeta "front" 
   nginx:
     image: nginx:1.25.3-alpine
     volumes:
@@ -40,7 +44,7 @@ services:
     depends_on:
       - node
 
-# Aplicació per accedir via web a la nostra base de dades, al port 9090
+  # Aplicació per accedir via web a la nostra base de dades, al port 9090
   adminer:
     image: adminer:4.7.7
     restart: always
@@ -49,13 +53,13 @@ services:
     depends_on:
       - db
 
-# Base de dades MySQL (db)
-# anomeneu-la com vulgueu, però recordeu que ha de coincidir amb el nom
-# que poseu a la configuració de la connexió de l'aplicació (i el depends_on de l'adminer)
-# Crearà una carpeta "./mysql_data" on guardarà les dades de la base de dades
-# Si esborreu la carpeta, la BBDD estarà buida i podreu començar des de 0 
-# També crearà una BBBDD "persones" pq. la imatge de mysql executa els fitxers
-# que hi hagi a la carpeta "docker-entrypoint-initdb.d" al primer inici
+  # Base de dades MySQL (db)
+  # anomeneu-la com vulgueu, però recordeu que ha de coincidir amb el nom
+  # que poseu a la configuració de la connexió de l'aplicació (i el depends_on de l'adminer)
+  # Crearà una carpeta "./mysql_data" on guardarà les dades de la base de dades
+  # Si esborreu la carpeta, la BBDD estarà buida i podreu començar des de 0 
+  # També crearà una BBBDD "persones" pq. la imatge de mysql executa els fitxers
+  # que hi hagi a la carpeta "docker-entrypoint-initdb.d" al primer inici
   db:
     image: mysql:8.2.0
     restart: always

@@ -6,3 +6,9 @@
 # però si que es crearà al fer el docker-compose up
 
 mysql_data/
+
+# La carpeta node_modules conté els mòduls de node
+# que s'instal·len amb el npm ci del docker compose
+# Per això, aquesta carpeta no es pujarà al repositori
+node_modules/
+```

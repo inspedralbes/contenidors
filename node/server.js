@@ -1,7 +1,7 @@
 const WebSocket = require('ws');
-
+console.log('Starting nodejs server...');
 const server = new WebSocket.Server({ port: 8080 });
-
+console.log('Server nodejs started');
 server.on('connection', (socket) => {
   console.log('Client connected');
 

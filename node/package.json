@@ -5,11 +5,14 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "nodemon -L server.js"
   },
   "author": "Ermengol Bota",
   "license": "ISC",
   "dependencies": {
     "ws": "^8.14.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.3"
   }
 }
