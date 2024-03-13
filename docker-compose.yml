@@ -27,12 +27,13 @@ services:
       - 8080:8080
       
       # Per una banda primer ho instal·lem tot amb npm ci que fa la instal·lació
-      # neta, i després executemn npm start per aixecar el nodejs
+      # neta, i després executem npm start per aixecar el nodejs
       # ATENCIO, al package.json l'script start l'hem canviat pq. cridi a
       # nodemon enlloc de node. D'aquesta forma detecta els canvis ens els 
       # fitxers i recarrega el nodejs
-      # Per instal·lar nodemon: npm install --save-dev nodemon o directament al
-      # packages com a   "devDependencies": { "nodemon": "^3.0.3"}
+      # Per instal·lar nodemon: npm install --save-dev nodemon 
+      # o directament al packages com a
+      #   "devDependencies": { "nodemon": "^3.0.3"}
     command: bash -c "npm ci && npm start"
 
   # Servidor web NGINX per servir els fitxers estàtics pel port 80
@@ -45,6 +46,16 @@ services:
       - 80:80
     depends_on:
       - node
+  
+  laravel:
+    #Tenim un dockerfile amb PHP i Composer i les utilitats de docker per php per aixecar un servidor Laravel
+    build: ./back_laravel
+    ports:
+      - 8000:8000
+    volumes:
+      - ./back_laravel:/var/www/
+    working_dir: /var/www/
+    command: bash -c "composer install && echo "Aqui podriem fer el migrate" &&php artisan serve --host=0.0.0.0"    
 
   # Aplicació per accedir via web a la nostra base de dades, al port 9090
   adminer:
