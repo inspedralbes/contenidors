@@ -4,7 +4,34 @@ Exemple de com **conteniritzar** amb **docker** la vostra aplicació.
 
 El projecte té dues configuracions
 ## Compose (aixecar-los tots de cop)
-Un sol fitxer de configuracióq que especifica a partir de quines imatges s'han de crear els contenidors, i com s'han de configurar.
+
+Per aixecar tot l'entorn de desenvolupament:
+
+ 1. Copiar el fitxer de Laravel .env.example a .env
+ 1. Editar-lo pq apunt a on toca, segurament amb les següents dades
+
+```
+DB_CONNECTION=mysql
+DB_HOST=db
+DB_PORT=3306
+DB_DATABASE=persones
+DB_USERNAME=user
+DB_PASSWORD=user
+```
+ 3. Aixecar tot l'entorn
+```
+docker compose up
+```
+ 4. Comprovar-ho accedint a l'aplicació
+ 1. php donarà problemes pq.
+    1. No hem fet el migrate
+    1. No hem generat la clau d'encriptació
+ 1. Ho podem solucionar "connectant-nos" al contenidor de Laravel i executant les ordres necessàries
+ 1. L'ordre és "docker exec -it ID_CONTENIDOR /bin/bash
+    1. Això obrirà un terminal DINS dels contenidor de Laravel i allà podrem executar les ordres que necessitem
+    1. php art
+
+Això s'aconsegueix gràcies a un sol fitxer de configuracióq que especifica a partir de quines imatges s'han de crear els contenidors, i com s'han de configurar.
 Des de
 ```
 docker-compose.yml

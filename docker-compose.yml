@@ -14,8 +14,9 @@ services:
 
   # Servidor node que aixeca un WebSocker al prt 8080
   # el codi està a la carpeta "node" i s'executa amb "npm start"
-  # S'ha de fer un npm install per instal·lar les dependències ABANS
-  # d'engegar-ho tot
+  # S'ha de fer un npm install per instal·lar les dependències
+  # Es pot accedir DINS del contenidor una vegada aixecat amb
+  # docker exec -it [nom_contenidor o ID] /bin/bash
   # El Dockerfile és totalment autocontingut, però aquí depen de la carpeta node_modules
   # que ja hi hagi
   node:
@@ -51,11 +52,11 @@ services:
     #Tenim un dockerfile amb PHP i Composer i les utilitats de docker per php per aixecar un servidor Laravel
     build: ./back_laravel
     ports:
-      - 8000:8000
+      - 8001:8000
     volumes:
       - ./back_laravel:/var/www/
     working_dir: /var/www/
-    command: bash -c "composer install && echo "Aqui podriem fer el migrate" &&php artisan serve --host=0.0.0.0"    
+    command: bash -c "composer install && echo '1' && echo 'php artisan el que necessitis' && echo '2' &&php artisan serve --host=0.0.0.0"    
 
   # Aplicació per accedir via web a la nostra base de dades, al port 9090
   adminer:
