@@ -8,11 +8,13 @@ El projecte té dues configuracions
 Per aixecar tot l'entorn de desenvolupament:
 
  1. Copiar el fitxer de Laravel .env.example a .env
- 1. Editar-lo pq apunt a on toca, segurament amb les següents dades
+ 1. Editar-lo pq apunti a on toca, segurament amb les següents dades
 
 ```
 DB_CONNECTION=mysql
-DB_HOST=db
+# Gràcies a docker, podem accedir als contenidors pel nom
+# que tenen al docker compose, per tant:
+DB_HOST=db   #NOM del contenidor que té la BBDD, no cal saber IP's
 DB_PORT=3306
 DB_DATABASE=persones
 DB_USERNAME=user
@@ -27,16 +29,20 @@ docker compose up
     1. No hem fet el migrate
     1. No hem generat la clau d'encriptació
  1. Ho podem solucionar "connectant-nos" al contenidor de Laravel i executant les ordres necessàries
- 1. L'ordre és "docker exec -it ID_CONTENIDOR /bin/bash
+ 1. Necessitarèm saber els ID dels contenidors. Amb l'ordre "docker ps" ho podrem saber. _No cal posar tot l'ID, només les 3 primeres lletres normalment_ 
+ 1. L'ordre és "docker exec -it ID_CONTENIDOR /bin/bash 
     1. Això obrirà un terminal DINS dels contenidor de Laravel i allà podrem executar les ordres que necessitem
-    1. php art
+       1. php artisan migrate
+       1. php artisan key:generate
+       1. ...
+    
 
-Això s'aconsegueix gràcies a un sol fitxer de configuracióq que especifica a partir de quines imatges s'han de crear els contenidors, i com s'han de configurar.
-Des de
+
+El fitxer que configura TOTS els contenidors i com s'han d'aixecar és:
 ```
 docker-compose.yml
 ```
-indiquem a com s'ha d'aixecar cadascun dels contenidors però el codi font estarà FORA dels contenidors (  [docker-compose.yml](docker-compose.yml) )
+Aquí indiquem a com s'ha d'aixecar cadascun dels contenidors però el codi font estarà FORA dels contenidors (  [docker-compose.yml](docker-compose.yml) )
 
 És a dir, a dins dels contenidors hi haurà el servei en marxa, però les dades estaran fora.
 És molt còmode per entorns de **desenvolupament** ja que podem modificar els fitxers des de la nostra màquina, de fora estant.
