@@ -2,13 +2,32 @@
 
 Exemple de com **conteniritzar** amb **docker** la vostra aplicació.
 
-El projecte té dues configuracions
+## Aplicació 
+
+Aquest projecte conté diverses aplicacions per mostrar diverses configuracions i possiblitats
+
+ATENCIÓ: Llegiu detingudament l'apartat Configuracions abans d'aixecar els contenidors (fitxer .env, migrates...)
+
+*Ports i aplicacions*:
+
+ * http://localhost (:80): NGINX servint ./front. És un simple HTML que té un botó "start" que obre un socket cap a 8080 i espera rebre'n números, i també té un botó "fetch a artisan" per obtenir un JSON de :8001/api (laravel amb artisan)
+ * http://localhost:8080: Node (costat servidor) que obre en "Listening" un socket per on enviarà números aleatoris quan algú s'hi connecti. Generat per ./node i consumit per HTML stàtic
+ * http://localhost:8001: Laravel (servit amb artisan serve)
+* http://localhost:8001/api/fruites: Laravel (servit amb artisan serve) que retorna un JSON (sempre el mateix) amb un llistat de fruites.
+
+I aleshores hem configurat també Nginx com a proxy invers, que ens ofereix les següents rutes (que son reenviades als respectius servidors):
+ * http://localhost/api/fruites : Laravel 
+ * http://localhost/socket : nodejs
+
+
+
+# Configuracions
 ## Compose (aixecar-los tots de cop)
 
 Per aixecar tot l'entorn de desenvolupament:
 
  1. Copiar el fitxer de Laravel .env.example a .env
- 1. Editar-lo pq apunti a on toca, segurament amb les següents dades
+ 1. Editar-lo pq apunti a on toca, segurament amb les següents dades (tot i que ara mateix la BBDD no es fa servir encara)
 
 ```
 DB_CONNECTION=mysql
@@ -28,7 +47,8 @@ docker compose up
  1. php donarà problemes pq.
     1. No hem fet el migrate
     1. No hem generat la clau d'encriptació
- 1. Ho podem solucionar "connectant-nos" al contenidor de Laravel i executant les ordres necessàries
+ 1. Ho podem solucionar "connectant-nos" al contenidor de Laravel i executant les ordres necessàries.
+ 1. També podem modificar el docker-compose.yml pq. ho faci cada cop que s'aixeca (mireu-ne els ccomentaris)
  1. Necessitarèm saber els ID dels contenidors. Amb l'ordre "docker ps" ho podrem saber. _No cal posar tot l'ID, només les 3 primeres lletres normalment_ 
  1. L'ordre és "docker exec -it ID_CONTENIDOR /bin/bash 
     1. Això obrirà un terminal DINS dels contenidor de Laravel i allà podrem executar les ordres que necessitem

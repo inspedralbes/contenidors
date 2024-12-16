@@ -8,7 +8,7 @@
 </head>
 
 <body>
-    <h1>Exemple simple de WebSocket</h1>
+    <h1>WebSocket</h1>
     <p>Aquesta app es connecta a un WS.
         El WS està programat en node i ha d'estar actiu al port 8080 <code>node ./server.js</code>.
         Quan es connecta, el WS envia un número aleatori a la app cada segon.
@@ -20,11 +20,24 @@
         la comunicació WebSocket.
     </p>
     <hr>
-    <button id="startButton">Start</button>
+    <button id="startButton">Start nodejs</button>
+    <button id="startButtonNginx">Start nginx</button>
+
     <br>
     <label id="randomNumberLabel">Random Number:</label>
     <br>
     <div id="status" style="color: orange;"></div>
+
+    <hr>
+    <h1>API Laravel</h1>
+    <p>El següent botó obtindrà un llistat de fruites del Laravel servit per php artisan o per nginx fent de proxy
+        invers:</p>
+    <button id="fetchButtonArtisan">Fetch Artisan</button>
+    <button id="fetchButtonNginx">Fetch Nginx</button>
+
+    <br>
+    <textarea id="fetchTextArtisan" rows="7" cols="40" readonly>
+    </textarea>
 
     <script>
 
@@ -35,8 +48,14 @@
             // Reference to the label element
             const randomNumberLabel = document.getElementById('randomNumberLabel');
 
-            // Reference to the start button
+            const fetchButtonArtisan = document.getElementById('fetchButtonArtisan');
+
+            const fetchButtonNginx = document.getElementById('fetchButtonNginx');
+
+
             const startButton = document.getElementById('startButton');
+            const startButtonNginx = document.getElementById('startButtonNginx');
+
 
             // The WebSocket server to connect to
             const ws_server = 'ws://localhost:8080';
@@ -46,24 +65,35 @@
             // Event listener for the Start button click
             startButton.addEventListener('click', () => {
                 status.innerText = 'Connecting...';
+                initSocket('ws://localhost:8080');
 
+            });
+
+
+            startButtonNginx.addEventListener('click', () => {
+                status.innerText = 'Connecting...';
+                initSocket('ws://localhost/socket');
+
+            });
+
+            function initSocket(adreçaSocket) {
                 // Create the WebSocket object only if it doesn't already exist
-                if (socket == null) {
-                    socket = new WebSocket(ws_server);
-                } else {
-                    status.innerText = 'Already connected';
+                if (socket) {
+                    status.innerText = 'Ja connectat. Desconectem i hi tornem';
+                    socket.close();
                 }
 
+                socket = new WebSocket(adreçaSocket);
 
                 socket.onerror = function (error) {
                     console.log('WebSocket Error: ', error);
-                    status.innerText = 'Error: unable to connect to server: ' + ws_server;
+                    status.innerText = 'Error: unable to connect to server: ' + adreçaSocket;
                 };
 
 
                 // Open the WebSocket connection
                 socket.addEventListener('open', (event) => {
-                    status.innerText = 'Connected';
+                    status.innerText = `Connectats a ${adreçaSocket}`;
                     console.log('WebSocket connection opened:', event);
 
                     // Listen for messages from the server
@@ -79,7 +109,37 @@
                 socket.addEventListener('close', (event) => {
                     console.log('WebSocket connection closed:', event);
                 });
+            };
+
+
+            fetchButtonArtisan.addEventListener('click', () => {
+                const fetchURLArtisan = "http://localhost:8001/api/fruites";
+                ferFetch(fetchURLArtisan, fetchTextArtisan);
             });
+
+
+            fetchButtonNginx.addEventListener('click', () => {
+                const fetchURLNginx = "http://localhost/api/fruites";
+                ferFetch(fetchURLNginx, fetchTextArtisan);
+            });
+
+            function ferFetch(url, textArea) {
+                textArea.value = `...fent una nova petició a ${url}...`;
+                fetch(url)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`S'ha produït un error: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        textArea.value = url + "\n" + JSON.stringify(data, null, 2);
+                    })
+                    .catch(error => {
+                        console.error('Error en fer fetch:', error);
+                        textArea.value = `Error en fer fetch a ${url}: ${error}`;
+                    });
+            }
         });
     </script>
 

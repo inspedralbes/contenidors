@@ -8,6 +8,7 @@ RUN apt update && apt install -y \
     libpng-dev \
     libonig-dev \
     libxml2-dev
+RUN apt install zip unzip
 RUN apt clean && rm -rf /var/lib/apt/lists/*
 RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 
