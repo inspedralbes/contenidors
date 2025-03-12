@@ -10,6 +10,7 @@
   "author": "Ermengol Bota",
   "license": "ISC",
   "dependencies": {
+    "sequelize": "^6.37.6",
     "ws": "^8.14.2"
   },
   "devDependencies": {

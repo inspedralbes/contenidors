@@ -69,6 +69,12 @@ Aquí indiquem a com s'ha d'aixecar cadascun dels contenidors però el codi font
 
 * És molt important tenir present les rutes del paràmerte **"volumes"** que és el que aconsegueix aquest efecte.
 
+## Executar ordres arbitràries dins d'un contenidor (`npm --install ...`)
+A vegades necessitem afegir una dependència (`npm install...`) o executar una ordre qualsevol dins d'un contenidor per tal de poder tenir accés a les llibreries i binàries del contenidor. 
+
+Amb el contenidor "node" en tenim un exemple, mireu la informació de [[./node/README.md]]
+
+
 
 ## Contenidors individuals (crear les imatges una a una, i aixecar-les una a una)
 D'aquesta forma tenim un fitxer de creació de la imatge **per a cada servei** què volguem. El fitxer
