@@ -92,7 +92,11 @@ services:
     ports:
       - 3306:3306
     volumes:
-      # Per guardar les dades de forma persistent
-      - ./mysql_data:/var/lib/mysql
+      # Per guardar les dades de forma persistent en un named volume
+      - mysql_data:/var/lib/mysql
       # Per crear algunes taules al primer inici
       - ./mysql/dades.sql:/docker-entrypoint-initdb.d/dades.sql
+
+#Definim els named volums que fa servir l'aplicacio
+volumes:
+  mysql_data:
